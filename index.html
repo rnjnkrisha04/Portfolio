@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signova | Google Meet AI</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+</head>
+<body x-data="signovaMeet()" x-init="initAI()">
+
+    <main class="main-stage">
+        <div class="remote-view">
+            <div class="participant-avatar">A</div>
+            <p class="status">Akshat is signing...</p>
+            
+            <div class="caption-overlay" x-show="translation !== '...'">
+                <p x-text="translation"></p>
+            </div>
+        </div>
+
+        <div class="local-pip">
+            <video id="webcam" class="hidden"></video>
+            <canvas id="ai_canvas"></canvas>
+            <div class="ai-tag">SIGNOVA AI ACTIVE</div>
+        </div>
+
+        <aside class="transcript-panel" x-show="showLog" x-transition>
+            <header>
+                <h3>Meeting Transcript</h3>
+                <button @click="showLog = false">✕</button>
+            </header>
+            <div class="log-content">
+                <template x-for="msg in history">
+                    <div class="log-entry">
+                        <span class="time" x-text="msg.time"></span>
+                        <p x-text="msg.text"></p>
+                    </div>
+                </template>
+            </div>
+        </aside>
+    </main>
+
+    <footer>
+        <div class="meeting-info">Signova | Professional Meet</div>
+        <div class="controls">
+            <button class="btn-circle">🎤</button>
+            <button class="btn-circle">📹</button>
+            <button class="btn-ai" @click="aiEnabled = !aiEnabled" :class="aiEnabled ? 'bg-blue-600' : 'bg-gray-600'">
+                AI TRANSLATION: <span x-text="aiEnabled ? 'ON' : 'OFF'"></span>
+            </button>
+            <button class="btn-circle" @click="showLog = !showLog">📄</button>
+            <button class="btn-end">Leave</button>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
